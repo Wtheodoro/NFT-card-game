@@ -1,9 +1,54 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-import { PagehigherOrderComponent } from '../components'
+import {
+  PagehigherOrderComponent,
+  CustomInput,
+  CustomButton,
+} from '../components'
+import { useGlobalContext } from '../context'
 
 const Home = () => {
-  return <div></div>
+  const [playerName, setPlayerName] = useState('')
+
+  // Check all contract methods inside AvaxGods.sol file
+  const { contract, walletAddress, setShowAlert } = useGlobalContext()
+
+  const handleRegisterClick = async () => {
+    try {
+      const playerExist = await contract.isPlayer(walletAddress)
+
+      if (!playerExist) {
+        await contract.registerPlayer(playerName, playerName)
+
+        setShowAlert({
+          status: true,
+          type: 'info',
+          message: `${playerName} is being summoned!`,
+        })
+      }
+    } catch (error) {
+      setShowAlert({
+        status: true,
+        type: 'failure',
+        message: 'Something went wrong!',
+      })
+    }
+  }
+
+  return (
+    <div className='flex flex-col'>
+      <CustomInput
+        label='Name'
+        placeholder='Enter your player name'
+        value={playerName}
+        handleValueChange={setPlayerName}
+      />
+
+      <CustomButton handleClick={handleRegisterClick} restStyles='mt-6'>
+        Resgister
+      </CustomButton>
+    </div>
+  )
 }
 
 export default PagehigherOrderComponent(
