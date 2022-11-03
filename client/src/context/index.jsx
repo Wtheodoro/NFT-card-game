@@ -36,7 +36,9 @@ export const GlobalContextProvider = ({ children }) => {
       setContract(newContract)
     }
 
-    setSmartContractAndProvider()
+    const timer = setTimeout(() => setSmartContractAndProvider(), 1000)
+
+    return () => clearTimeout(timer)
   }, [])
 
   useEffect(() => {
