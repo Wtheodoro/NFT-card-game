@@ -54,7 +54,7 @@ const Home = () => {
 export default PagehigherOrderComponent(
   Home,
   <>
-    Welcome to Avax Godz <br /> a Web3 NFT Card Gane
+    Welcome to Avax Gods <br /> a Web3 NFT Card Gane
   </>,
   <>
     Connect your wallet to start playing <br /> the ultimate Web3 Battle Card
