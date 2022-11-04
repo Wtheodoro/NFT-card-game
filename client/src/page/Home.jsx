@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import {
   PagehigherOrderComponent,
@@ -9,6 +11,8 @@ import { useGlobalContext } from '../context'
 
 const Home = () => {
   const [playerName, setPlayerName] = useState('')
+
+  const navigate = useNavigate()
 
   // Check all contract methods inside AvaxGods.sol file
   const { contract, walletAddress, setShowAlert } = useGlobalContext()
@@ -34,6 +38,17 @@ const Home = () => {
       })
     }
   }
+
+  useEffect(() => {
+    const checkForPlayerToken = async () => {
+      const playerExist = await contract.isPlayer(walletAddress)
+      const playerTokenExist = await contract.isPlayerToken(walletAddress)
+
+      if (playerExist && playerTokenExist) navigate('/create-battle')
+    }
+
+    if (contract) checkForPlayerToken()
+  }, [contract])
 
   return (
     <div className='flex flex-col'>
