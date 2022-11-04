@@ -12,6 +12,11 @@ export const GlobalContextProvider = ({ children }) => {
   const [provider, setProvider] = useState('')
   const [contract, setContract] = useState('')
   const [battleName, setBattleName] = useState('')
+  const [gameData, setGameData] = useState({
+    players: [],
+    pendingBattles: [],
+    activeBattle: null,
+  })
   const [showAlert, setShowAlert] = useState({
     status: false,
     type: 'info',
@@ -52,6 +57,36 @@ export const GlobalContextProvider = ({ children }) => {
     }
   }, [showAlert])
 
+  // Set the gam data to the state
+  useEffect(() => {
+    const fetchGameData = async () => {
+      const fetchedBattles = await contract.getAllBattles()
+      const pendingBattles = fetchedBattles.filter(
+        (battle) => battle.battleStatus === 0
+      )
+
+      let activeBattle
+
+      fetchedBattles.forEach((battle) => {
+        const ImInBattle = battle.players.find(
+          (player) => player.toLowerCase() === walletAddress.toLocaleLowerCase()
+        )
+        const currentBattleHasAWinner = battle.winner.startsWith('0x00')
+
+        if (ImInBattle && currentBattleHasAWinner) {
+          activeBattle = battle
+        }
+      })
+
+      setGameData({
+        pendingBattles: pendingBattles.slice(1),
+        activeBattle: activeBattle,
+      })
+    }
+
+    if (contract) fetchGameData()
+  }, [contract])
+
   // Set the wallet address to the state
   const updateCurrentWalletAddress = async () => {
     // window.ethereum only exist because of core google extension
@@ -72,6 +107,7 @@ export const GlobalContextProvider = ({ children }) => {
         setShowAlert,
         battleName,
         setBattleName,
+        gameData,
       }}
     >
       {children}

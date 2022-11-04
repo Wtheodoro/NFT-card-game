@@ -13,8 +13,14 @@ import styles from '../styles'
 const CreateBattle = () => {
   const [waitBattle, setWaitBattle] = useState(false)
 
-  const { contract, battleName, setBattleName } = useGlobalContext()
+  const { contract, battleName, setBattleName, gameData } = useGlobalContext()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    const battleIsPending = gameData?.activeBattle?.battleStatus === 0
+
+    if (battleIsPending) setWaitBattle(true)
+  }, [gameData])
 
   const handleCreateBattleClick = async () => {
     if (!battleName || !battleName.trim()) return null
