@@ -3,6 +3,7 @@ import { ethers } from 'ethers'
 import Web3Modal from 'web3modal'
 import { useNavigate } from 'react-router-dom'
 import { ABI, ADDRESS } from '../contract'
+import { createEventListeners } from './createEventListeners'
 
 const GlobalContext = createContext()
 
@@ -22,6 +23,9 @@ export const GlobalContextProvider = ({ children }) => {
     type: 'info',
     message: '',
   })
+  const [updateGameData, setUpdateGameData] = useState(0)
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     updateCurrentWalletAddress()
@@ -46,6 +50,19 @@ export const GlobalContextProvider = ({ children }) => {
 
     return () => clearTimeout(timer)
   }, [])
+
+  useEffect(() => {
+    if (!contract) return
+
+    createEventListeners({
+      navigate,
+      contract,
+      provider,
+      walletAddress,
+      setShowAlert,
+      setUpdateGameData,
+    })
+  }, [contract])
 
   useEffect(() => {
     if (showAlert?.status) {
@@ -85,7 +102,7 @@ export const GlobalContextProvider = ({ children }) => {
     }
 
     if (contract) fetchGameData()
-  }, [contract])
+  }, [contract, updateGameData])
 
   // Set the wallet address to the state
   const updateCurrentWalletAddress = async () => {
