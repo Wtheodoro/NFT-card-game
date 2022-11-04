@@ -11,6 +11,7 @@ export const GlobalContextProvider = ({ children }) => {
   const [walletAddress, setWalletAddress] = useState('')
   const [provider, setProvider] = useState('')
   const [contract, setContract] = useState('')
+  const [battleName, setBattleName] = useState('')
   const [showAlert, setShowAlert] = useState({
     status: false,
     type: 'info',
@@ -64,7 +65,14 @@ export const GlobalContextProvider = ({ children }) => {
 
   return (
     <GlobalContext.Provider
-      value={{ contract, walletAddress, showAlert, setShowAlert }}
+      value={{
+        contract,
+        walletAddress,
+        showAlert,
+        setShowAlert,
+        battleName,
+        setBattleName,
+      }}
     >
       {children}
     </GlobalContext.Provider>
