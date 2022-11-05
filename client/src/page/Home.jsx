@@ -15,7 +15,8 @@ const Home = () => {
   const navigate = useNavigate()
 
   // Check all contract methods inside AvaxGods.sol file
-  const { contract, walletAddress, setShowAlert } = useGlobalContext()
+  const { contract, walletAddress, setShowAlert, gameData, setErrorMessage } =
+    useGlobalContext()
 
   const handleRegisterClick = async () => {
     try {
@@ -31,11 +32,7 @@ const Home = () => {
         })
       }
     } catch (error) {
-      setShowAlert({
-        status: true,
-        type: 'failure',
-        message: 'Something went wrong!',
-      })
+      setErrorMessage(error)
     }
   }
 
@@ -49,6 +46,12 @@ const Home = () => {
 
     if (contract) checkForPlayerToken()
   }, [contract])
+
+  useEffect(() => {
+    if (gameData.activeBattle) {
+      navigate(`/battle/${gameData.activeBattle.name}`)
+    }
+  }, [gameData])
 
   return (
     <div className='flex flex-col'>
