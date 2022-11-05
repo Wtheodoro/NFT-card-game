@@ -36,7 +36,7 @@ export const createEventListeners = ({
   playerOneRef,
   playerTwoRef,
 }) => {
-  const NewPlayerEventFilter = contract.filters?.NewPlayer()
+  const NewPlayerEventFilter = contract.filters?.NewPlayer?.()
   AddNewEvent(NewPlayerEventFilter, provider, ({ args }) => {
     console.log('new player created', args)
 
@@ -49,7 +49,7 @@ export const createEventListeners = ({
     }
   })
 
-  const NewGameTokenEventFilter = contract.filters.NewGameToken()
+  const NewGameTokenEventFilter = contract.filters?.NewGameToken?.()
   AddNewEvent(NewGameTokenEventFilter, provider, ({ args }) => {
     console.log('New game token created!', args.owner)
 
@@ -64,7 +64,7 @@ export const createEventListeners = ({
     }
   })
 
-  const NewBattleEventFilter = contract.filters.NewBattle()
+  const NewBattleEventFilter = contract.filters?.NewBattle?.()
   AddNewEvent(NewBattleEventFilter, provider, ({ args }) => {
     console.log('new battle created', args, walletAddress)
 
@@ -77,12 +77,12 @@ export const createEventListeners = ({
     setUpdateGameData((prev) => prev + 1)
   })
 
-  const BattleMoveEventFilter = contract.filters.BattleMove()
+  const BattleMoveEventFilter = contract.filters?.BattleMove?.()
   AddNewEvent(BattleMoveEventFilter, provider, ({ args }) => {
     console.log('Battle move initiated!', args)
   })
 
-  const RoundEndedEventFilter = contract.filters.RoundEnded()
+  const RoundEndedEventFilter = contract.filters?.RoundEnded?.()
   AddNewEvent(RoundEndedEventFilter, provider, ({ args }) => {
     console.log('Round ended!!', args, walletAddress)
 
@@ -101,7 +101,7 @@ export const createEventListeners = ({
     setUpdateGameData((prev) => prev + 1)
   })
 
-  const BattleEndedEventFilter = contract.filters.BattleEnded()
+  const BattleEndedEventFilter = contract.filters?.BattleEnded?.()
   AddNewEvent(BattleEndedEventFilter, provider, ({ args }) => {
     console.log('Battle ended!', args, walletAddress)
 
@@ -113,7 +113,7 @@ export const createEventListeners = ({
       })
     }
 
-    if (walletAddress.toLowerCase() === args.loser.toLowerCase()) {
+    if (walletAddress.toLowerCase() === args.loser?.toLowerCase?.()) {
       setShowAlert({
         status: true,
         type: 'failure',
