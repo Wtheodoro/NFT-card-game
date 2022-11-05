@@ -4,42 +4,6 @@ Check the deploy [`preview`](https://www.nft-card-game.walisontsx.com/)
 
 ![GIF](https://github.com/Wtheodoro/nft-card-game/blob/main/client/public/gif/avaxgods.gif)
 
-## `Project purpose`
+## `Frontend`
 
-- Practice ethers lib
-- Learn emit events from smart contracts and use on frontend
-- Lear how to connect crypto wallet into smart contract
-- Practice React
-- Practice Tailwind
-- Practice Clean Code fundamentals
-- Practice UI/UX
-- Practice higher order components
-
-## `Built with`
-
-- React
-- Ethers
-- TailwindCSS
-
-## `Step by step to run this project`
-
-### `clone`
-
-First you must clone the repository.
-
-### `Install the dependencies`
-
-This project depends on some dependencies, so the command **npm install** or **yarn** takes care of installing all of them
-
-    npm install
-
-    yarn
-
-### `Run the project`
-
-Runs the app in the development mode.\
-Open [http://localhost:5173](http://localhost:5173) to view it in the browser.
-
-    npm run dev
-
-    yarn dev
+README.md inside client folder for more info...
