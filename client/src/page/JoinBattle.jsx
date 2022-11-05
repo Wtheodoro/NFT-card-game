@@ -36,6 +36,11 @@ const JoinBattle = () => {
     }
   }
 
+  useEffect(() => {
+    if (gameData?.activeBattle?.battleStatus === 1)
+      navigate(`/battle/${gameData.activeBattle.name}`)
+  }, [gameData])
+
   return (
     <>
       <h2 className={styles.joinHeadText}>Available Battles:</h2>
