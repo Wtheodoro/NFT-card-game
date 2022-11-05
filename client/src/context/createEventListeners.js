@@ -9,7 +9,7 @@ const emptyAccountAddress = '0x0000000000000000000000000000000000000000'
 const AddNewEvent = (eventFilter, provider, callback) => {
   provider.removeListener?.(eventFilter) // make sure to not have multiple listeners for the same event at the same time
 
-  provider.on(eventFilter, (logs) => {
+  provider?.on(eventFilter, (logs) => {
     const parseLogs = new ethers.utils.Interface(ABI).parseLog(logs)
 
     callback(parseLogs)

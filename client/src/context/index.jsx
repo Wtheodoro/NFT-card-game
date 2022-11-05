@@ -50,7 +50,7 @@ export const GlobalContextProvider = ({ children }) => {
   useEffect(() => {
     updateCurrentWalletAddress()
 
-    window.ethereum.on('accountsChanged', updateCurrentWalletAddress)
+    window.ethereum?.on('accountsChanged', updateCurrentWalletAddress)
   }, [])
 
   // Reset Web3 onboarding modal params
@@ -62,8 +62,8 @@ export const GlobalContextProvider = ({ children }) => {
     }
 
     resetParams()
-    window.ethereum.on('chainChanged', () => resetParams())
-    window.ethereum.on('accountsChanged', () => resetParams())
+    window.ethereum?.on('chainChanged', () => resetParams())
+    window.ethereum?.on('accountsChanged', () => resetParams())
   }, [])
 
   // Set the smart contract and the provider to the state
