@@ -112,7 +112,6 @@ export const GlobalContextProvider = ({ children }) => {
       method: 'eth_requestAccounts',
     })
 
-    console.log(accounts)
     if (accounts) setWalletAddress(accounts[0])
   }
 
