@@ -41,7 +41,7 @@ export const createEventListeners = ({
 
     if (
       walletAddress.toLowerCase() === args.player1.toLowerCase() ||
-      walletAddress.toLowerCase() === args.player1.toLowerCase()
+      walletAddress.toLowerCase() === args.player2.toLowerCase()
     )
       navigate(`/battle/${args.battleName}`)
 

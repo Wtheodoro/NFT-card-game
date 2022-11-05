@@ -24,6 +24,7 @@ export const GlobalContextProvider = ({ children }) => {
     message: '',
   })
   const [updateGameData, setUpdateGameData] = useState(0)
+  const [battleground, setBattleground] = useState('bg-astral')
 
   const navigate = useNavigate()
 
@@ -125,6 +126,8 @@ export const GlobalContextProvider = ({ children }) => {
         battleName,
         setBattleName,
         gameData,
+        battleground,
+        setBattleground,
       }}
     >
       {children}
