@@ -18,3 +18,7 @@ Check the deploy [`preview`](https://www.nft-card-game.walisontsx.com/)
 ## `Frontend`
 
 README.md inside client folder for more info...
+
+## `Web 3.0 and Smart Contract`
+
+README.md inside web3 folder for more info...
