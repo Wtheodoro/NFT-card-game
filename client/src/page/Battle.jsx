@@ -89,7 +89,9 @@ const Battle = () => {
     playAudio(moveChoice === 1 ? attackSound : defenseSound)
 
     try {
-      await contract.attackOrDefendChoice(moveChoice, battleName)
+      await contract.attackOrDefendChoice(moveChoice, battleName, {
+        gasLimit: 200000,
+      })
 
       setShowAlert({
         status: true,
