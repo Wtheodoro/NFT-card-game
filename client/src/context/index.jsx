@@ -24,7 +24,13 @@ export const GlobalContextProvider = ({ children }) => {
     message: '',
   })
   const [updateGameData, setUpdateGameData] = useState(0)
-  const [battleground, setBattleground] = useState('bg-astral')
+  const [battleground, setBattleground] = useState(() => {
+    const preBattleground = localStorage.getItem('@nft-card-game-battleground')
+
+    if (preBattleground) return preBattleground
+
+    return 'bg-astral'
+  })
 
   const navigate = useNavigate()
 
