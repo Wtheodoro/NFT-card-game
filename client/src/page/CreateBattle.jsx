@@ -13,15 +13,22 @@ import styles from '../styles'
 const CreateBattle = () => {
   const [waitBattle, setWaitBattle] = useState(false)
 
-  const { contract, battleName, setBattleName, gameData, setErrorMessage } =
-    useGlobalContext()
+  const {
+    contract,
+    battleName,
+    setBattleName,
+    gameData,
+    setErrorMessage,
+    battleHasEnded,
+  } = useGlobalContext()
   const navigate = useNavigate()
 
   useEffect(() => {
     const battleIsPending = gameData?.activeBattle?.battleStatus === 0
     const battleHasBegan = gameData?.activeBattle?.battleStatus === 1
 
-    if (battleHasBegan) navigate(`/battle/${gameData.activeBattle.name}`)
+    if (battleHasBegan && !battleHasEnded)
+      navigate(`/battle/${gameData.activeBattle.name}`)
     if (battleIsPending) setWaitBattle(true)
   }, [gameData])
 

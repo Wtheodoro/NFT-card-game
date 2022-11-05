@@ -35,6 +35,7 @@ export const createEventListeners = ({
   setUpdateGameData,
   playerOneRef,
   playerTwoRef,
+  setBattleHasEnded,
 }) => {
   const NewPlayerEventFilter = contract.filters?.NewPlayer()
   AddNewEvent(NewPlayerEventFilter, provider, ({ args }) => {
@@ -121,6 +122,7 @@ export const createEventListeners = ({
       })
     }
 
-    navigate('/create-battle')
+    setBattleHasEnded(true)
+    setTimeout(() => navigate('/create-battle'), 3000)
   })
 }

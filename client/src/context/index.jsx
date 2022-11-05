@@ -41,6 +41,7 @@ export const GlobalContextProvider = ({ children }) => {
   })
   const [step, setStep] = useState(1)
   const [errorMessage, setErrorMessage] = useState('')
+  const [battleHasEnded, setBattleHasEnded] = useState(false)
 
   const navigate = useNavigate()
 
@@ -52,6 +53,14 @@ export const GlobalContextProvider = ({ children }) => {
 
     window.ethereum?.on('accountsChanged', updateCurrentWalletAddress)
   }, [])
+
+  useEffect(() => {
+    if (!setBattleHasEnded) return
+
+    const timer = setTimeout(() => setBattleHasEnded(false), 5000)
+
+    return () => clearTimeout(timer)
+  }, [battleHasEnded])
 
   // Reset Web3 onboarding modal params
   useEffect(() => {
@@ -96,6 +105,7 @@ export const GlobalContextProvider = ({ children }) => {
       setUpdateGameData,
       playerOneRef,
       playerTwoRef,
+      setBattleHasEnded,
     })
   }, [contract, step])
 
@@ -183,6 +193,8 @@ export const GlobalContextProvider = ({ children }) => {
         playerOneRef,
         playerTwoRef,
         updateCurrentWalletAddress,
+        battleHasEnded,
+        setBattleHasEnded,
       }}
     >
       {children}

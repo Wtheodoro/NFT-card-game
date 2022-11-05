@@ -23,7 +23,7 @@ const GameInfo = () => {
       setShowAlert({
         status: true,
         type: 'info',
-        message: `You're quittin the ${battleName}`,
+        message: `You're quitting the ${battleName}`,
       })
     } catch (error) {
       setErrorMessage(error)
