@@ -86,6 +86,8 @@ const Battle = () => {
   }, [contract, gameData, battleName])
 
   const makeAMove = async (moveChoice) => {
+    if (moveChoice === 1 && player1.mana < 2) return
+
     playAudio(moveChoice === 1 ? attackSound : defenseSound)
 
     try {
@@ -134,7 +136,9 @@ const Battle = () => {
           <ActionButton
             imgUrl={attack}
             handleClick={() => makeAMove(1)}
-            restStyles='mr-2 hover:border-yellow-400'
+            restStyles={`mr-2 hover:border-yellow-400 ${
+              player1.mana < 2 ? 'opacity-30' : 'opacity-100'
+            }`}
           />
 
           <Card
