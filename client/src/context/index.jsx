@@ -97,7 +97,7 @@ export const GlobalContextProvider = ({ children }) => {
       playerOneRef,
       playerTwoRef,
     })
-  }, [step])
+  }, [contract, step])
 
   // Clear Alert
   useEffect(() => {
