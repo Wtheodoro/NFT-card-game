@@ -6,8 +6,14 @@ import { CustomButton, PagehigherOrderComponent } from '../components'
 import styles from '../styles'
 
 const JoinBattle = () => {
-  const { contract, gameData, setShowAlert, setBattleName, walletAddress } =
-    useGlobalContext()
+  const {
+    contract,
+    gameData,
+    setShowAlert,
+    setBattleName,
+    walletAddress,
+    setErrorMessage,
+  } = useGlobalContext()
   const navigate = useNavigate()
 
   const battlesThatExcludesMe = gameData.pendingBattles.filter(
@@ -26,7 +32,7 @@ const JoinBattle = () => {
         message: `Joining ${battleName}...`,
       })
     } catch (error) {
-      console.error(error)
+      setErrorMessage(error)
     }
   }
 

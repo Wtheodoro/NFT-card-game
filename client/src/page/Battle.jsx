@@ -25,6 +25,9 @@ const Battle = () => {
     showAlert,
     setShowAlert,
     battleground,
+    setErrorMessage,
+    playerOneRef,
+    playerTwoRef,
   } = useGlobalContext()
   const { battleName } = useParams()
   const navigate = useNavigate()
@@ -75,12 +78,37 @@ const Battle = () => {
           mana: player2Mana,
         })
       } catch (error) {
-        console.error(error)
+        setErrorMessage(error)
       }
     }
 
     if (contract && gameData.activeBattle) getPlayerInfo()
   }, [contract, gameData, battleName])
+
+  const makeAMove = async (moveChoice) => {
+    playAudio(moveChoice === 1 ? attackSound : defenseSound)
+
+    try {
+      await contract.attackOrDefendChoice(moveChoice, battleName)
+
+      setShowAlert({
+        status: true,
+        type: 'info',
+        message: `Initiating ${moveChoice === 1 ? 'attack' : 'defense'}`,
+      })
+    } catch (error) {
+      setErrorMessage(error)
+    }
+  }
+
+  // Check if the game has ended
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!gameData?.activeBattle) navigate('/')
+    }, 2000)
+
+    return () => clearTimeout(timer)
+  }, [])
 
   return (
     <div
@@ -93,25 +121,30 @@ const Battle = () => {
       <PlayerInfo player={player2} playerIcon={player02Icon} />
 
       <div className={`${styles.flexCenter} flex-col my-10`}>
-        <Card card={player2} title={player2?.playerName} cardRef='' playerTwo />
+        <Card
+          card={player2}
+          title={player2?.playerName}
+          cardRef={playerTwoRef}
+          playerTwo
+        />
 
         <div className='flex items-center flex-row'>
           <ActionButton
             imgUrl={attack}
-            handleClick={() => {}}
+            handleClick={() => makeAMove(1)}
             restStyles='mr-2 hover:border-yellow-400'
           />
 
           <Card
             card={player1}
             title={player1?.playerName}
-            cardRef=''
+            cardRef={playerOneRef}
             restStyles='mt-3'
           />
 
           <ActionButton
             imgUrl={defense}
-            handleClick={() => {}}
+            handleClick={() => makeAMove(2)}
             restStyles='ml-6 hover:border-red-600'
           />
         </div>

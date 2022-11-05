@@ -1,9 +1,17 @@
-import React, { useContext, createContext, useState, useEffect } from 'react'
+import React, {
+  useContext,
+  createContext,
+  useState,
+  useEffect,
+  useRef,
+} from 'react'
 import { ethers } from 'ethers'
 import Web3Modal from 'web3modal'
 import { useNavigate } from 'react-router-dom'
+
 import { ABI, ADDRESS } from '../contract'
 import { createEventListeners } from './createEventListeners'
+import { GetParams } from '../utils/onboard'
 
 const GlobalContext = createContext()
 
@@ -31,13 +39,31 @@ export const GlobalContextProvider = ({ children }) => {
 
     return 'bg-astral'
   })
+  const [step, setStep] = useState(1)
+  const [errorMessage, setErrorMessage] = useState('')
 
   const navigate = useNavigate()
+
+  const playerOneRef = useRef()
+  const playerTwoRef = useRef()
 
   useEffect(() => {
     updateCurrentWalletAddress()
 
     window.ethereum.on('accountsChanged', updateCurrentWalletAddress)
+  }, [])
+
+  // Reset Web3 onboarding modal params
+  useEffect(() => {
+    const resetParams = async () => {
+      const currentStep = await GetParams()
+
+      setStep(currentStep.step)
+    }
+
+    resetParams()
+    window.ethereum.on('chainChanged', () => resetParams())
+    window.ethereum.on('accountsChanged', () => resetParams())
   }, [])
 
   // Set the smart contract and the provider to the state
@@ -59,7 +85,7 @@ export const GlobalContextProvider = ({ children }) => {
   }, [])
 
   useEffect(() => {
-    if (!contract) return
+    if (!contract && step !== -1) return
 
     createEventListeners({
       navigate,
@@ -68,9 +94,12 @@ export const GlobalContextProvider = ({ children }) => {
       walletAddress,
       setShowAlert,
       setUpdateGameData,
+      playerOneRef,
+      playerTwoRef,
     })
-  }, [contract])
+  }, [contract, step])
 
+  // Clear Alert
   useEffect(() => {
     if (showAlert?.status) {
       const timer = setTimeout(() => {
@@ -80,6 +109,22 @@ export const GlobalContextProvider = ({ children }) => {
       return () => clearTimeout(timer)
     }
   }, [showAlert])
+
+  // Handle error messages
+  useEffect(() => {
+    if (!errorMessage) return
+    const parsedErrorMessage = errorMessage?.reason
+      ?.slice('execution reverted: '.length)
+      .slice(0, -1)
+
+    if (parsedErrorMessage) {
+      setShowAlert({
+        status: true,
+        type: 'failure',
+        message: parsedErrorMessage,
+      })
+    }
+  }, [errorMessage])
 
   // Set the gam data to the state
   useEffect(() => {
@@ -133,6 +178,10 @@ export const GlobalContextProvider = ({ children }) => {
         gameData,
         battleground,
         setBattleground,
+        errorMessage,
+        setErrorMessage,
+        playerOneRef,
+        playerTwoRef,
       }}
     >
       {children}

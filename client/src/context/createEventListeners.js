@@ -1,15 +1,29 @@
 import { ethers } from 'ethers'
 
 import { ABI } from '../contract'
+import { playAudio, sparcle } from '../utils/animation.js'
+import { defenseSound } from '../assets'
+
+const emptyAccountAddress = '0x0000000000000000000000000000000000000000'
 
 const AddNewEvent = (eventFilter, provider, callback) => {
-  provider.removeListener(eventFilter) // make sure to not have multiple listeners for the same event at the same time
+  provider.removeListener?.(eventFilter) // make sure to not have multiple listeners for the same event at the same time
 
   provider.on(eventFilter, (logs) => {
     const parseLogs = new ethers.utils.Interface(ABI).parseLog(logs)
 
     callback(parseLogs)
   })
+}
+
+//* Get battle card coordinates
+const getCoords = (cardRef) => {
+  const { left, top, width, height } = cardRef.current.getBoundingClientRect()
+
+  return {
+    pageX: left + width / 2,
+    pageY: top + height / 2.25,
+  }
 }
 
 export const createEventListeners = ({
@@ -19,8 +33,10 @@ export const createEventListeners = ({
   walletAddress,
   setShowAlert,
   setUpdateGameData,
+  playerOneRef,
+  playerTwoRef,
 }) => {
-  const NewPlayerEventFilter = contract.filters.NewPlayer()
+  const NewPlayerEventFilter = contract.filters?.NewPlayer()
 
   AddNewEvent(NewPlayerEventFilter, provider, ({ args }) => {
     console.log('new player created', args)
@@ -44,6 +60,31 @@ export const createEventListeners = ({
       walletAddress.toLowerCase() === args.player2.toLowerCase()
     )
       navigate(`/battle/${args.battleName}`)
+
+    setUpdateGameData((prev) => prev + 1)
+  })
+
+  const BattleMoveEventFilter = contract.filters.BattleMove()
+
+  AddNewEvent(BattleMoveEventFilter, provider, ({ args }) => {
+    console.log('Battle move initiated!', args)
+  })
+
+  const RoundEndedEventFilter = contract.filters.RoundEnded()
+  AddNewEvent(RoundEndedEventFilter, provider, ({ args }) => {
+    console.log('Round ended!!', args, walletAddress)
+
+    for (let i = 0; i < args.damagedPlayers.length; i += 1) {
+      if (args.damagedPlayers[i] !== emptyAccountAddress) {
+        // if (args.damagedPlayers[i] === walletAddress) {
+        //   sparcle(getCoords(playerOneRef))
+        // } else if (args.damagedPlayers[i] !== walletAddress) {
+        //   sparcle(getCoords(playerTwoRef))
+        // }
+      } else {
+        playAudio(defenseSound)
+      }
+    }
 
     setUpdateGameData((prev) => prev + 1)
   })

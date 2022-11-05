@@ -1,33 +1,33 @@
-import { useState, useEffect } from 'react';
-import Modal from 'react-modal';
+import { useState, useEffect } from 'react'
+import Modal from 'react-modal'
 
-import styles from '../styles';
-import { CustomButton } from '.';
-import { useGlobalContext } from '../context';
-import { GetParams, SwitchNetwork } from '../utils/onboard.js';
+import styles from '../styles'
+import { CustomButton } from '.'
+import { useGlobalContext } from '../context'
+import { GetParams, SwitchNetwork } from '../utils/onboard.js'
 
 const OnboardModal = () => {
-  const [modalIsOpen, setIsOpen] = useState(false);
-  const { updateCurrentWalletAddress } = useGlobalContext();
-  const [step, setStep] = useState(-1);
+  const [modalIsOpen, setIsOpen] = useState(false)
+  const { updateCurrentWalletAddress } = useGlobalContext()
+  const [step, setStep] = useState(-1)
 
   async function resetParams() {
-    const currentStep = await GetParams();
-    setStep(currentStep.step);
-    setIsOpen(currentStep.step !== -1);
+    const currentStep = await GetParams()
+    setStep(currentStep.step)
+    setIsOpen(currentStep.step !== -1)
   }
 
   useEffect(() => {
-    resetParams();
+    resetParams()
 
     window?.ethereum?.on('chainChanged', () => {
-      resetParams();
-    });
+      resetParams()
+    })
 
     window?.ethereum?.on('accountsChanged', () => {
-      resetParams();
-    });
-  }, []);
+      resetParams()
+    })
+  }, [])
 
   const generateStep = (st) => {
     switch (st) {
@@ -38,11 +38,12 @@ const OnboardModal = () => {
               You don't have Core Wallet installed!
             </p>
             <CustomButton
-              title="Download Core"
               handleClick={() => window.open('https://core.app/', '_blank')}
-            />
+            >
+              Download Core
+            </CustomButton>
           </>
-        );
+        )
 
       case 1:
         return (
@@ -50,12 +51,11 @@ const OnboardModal = () => {
             <p className={styles.modalText}>
               You haven't connected your account to Core Wallet!
             </p>
-            <CustomButton
-              title="Connect Account"
-              handleClick={updateCurrentWalletAddress}
-            />
+            <CustomButton handleClick={updateCurrentWalletAddress}>
+              Connect Account
+            </CustomButton>
           </>
-        );
+        )
 
       case 2:
         return (
@@ -63,9 +63,9 @@ const OnboardModal = () => {
             <p className={styles.modalText}>
               You're on a different network. Switch to Fuji C-Chain.
             </p>
-            <CustomButton title="Switch" handleClick={SwitchNetwork} />
+            <CustomButton handleClick={SwitchNetwork}>Switch</CustomButton>
           </>
-        );
+        )
 
       case 3:
         return (
@@ -74,26 +74,29 @@ const OnboardModal = () => {
               Oops, you don't have AVAX tokens in your account
             </p>
             <CustomButton
-              title="Grab some test tokens"
-              handleClick={() => window.open('https://faucet.avax.network/', '_blank')}
-            />
+              handleClick={() =>
+                window.open('https://faucet.avax.network/', '_blank')
+              }
+            >
+              Grab some test tokens
+            </CustomButton>
           </>
-        );
+        )
 
       default:
-        return <p className={styles.modalText}>Good to go!</p>;
+        return <p className={styles.modalText}>Good to go!</p>
     }
-  };
+  }
 
   return (
     <Modal
       isOpen={modalIsOpen}
       className={`absolute inset-0 ${styles.flexCenter} flex-col ${styles.glassEffect}`}
-      overlayClassName="Overlay"
+      overlayClassName='Overlay'
     >
       {generateStep(step)}
     </Modal>
-  );
-};
+  )
+}
 
-export default OnboardModal;
+export default OnboardModal
