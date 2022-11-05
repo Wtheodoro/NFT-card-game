@@ -44,8 +44,8 @@ export const GlobalContextProvider = ({ children }) => {
 
   const navigate = useNavigate()
 
-  const playerOneRef = useRef()
-  const playerTwoRef = useRef()
+  const playerOneRef = useRef(null)
+  const playerTwoRef = useRef(null)
 
   useEffect(() => {
     updateCurrentWalletAddress()
@@ -97,7 +97,7 @@ export const GlobalContextProvider = ({ children }) => {
       playerOneRef,
       playerTwoRef,
     })
-  }, [contract, step])
+  }, [step])
 
   // Clear Alert
   useEffect(() => {

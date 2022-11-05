@@ -88,11 +88,11 @@ export const createEventListeners = ({
 
     for (let i = 0; i < args.damagedPlayers.length; i += 1) {
       if (args.damagedPlayers[i] !== emptyAccountAddress) {
-        // if (args.damagedPlayers[i] === walletAddress) {
-        //   sparcle(getCoords(playerOneRef))
-        // } else if (args.damagedPlayers[i] !== walletAddress) {
-        //   sparcle(getCoords(playerTwoRef))
-        // }
+        if (args.damagedPlayers[i] === walletAddress) {
+          sparcle(getCoords(playerOneRef))
+        } else if (args.damagedPlayers[i] !== walletAddress) {
+          sparcle(getCoords(playerTwoRef))
+        }
       } else {
         playAudio(defenseSound)
       }

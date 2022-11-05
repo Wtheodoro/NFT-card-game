@@ -122,7 +122,13 @@ const Battle = () => {
 
       <PlayerInfo player={player2} playerIcon={player02Icon} />
 
-      <div className={`${styles.flexCenter} flex-col my-10`}>
+      <div
+        className={`${styles.flexCenter} flex-col my-10`}
+        onClick={() => {
+          console.log(playerOneRef)
+          console.log(playerTwoRef)
+        }}
+      >
         <Card
           card={player2}
           title={player2?.playerName}
