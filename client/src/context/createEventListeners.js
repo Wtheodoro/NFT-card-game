@@ -9,7 +9,7 @@ const emptyAccountAddress = '0x0000000000000000000000000000000000000000'
 const AddNewEvent = (eventFilter, provider, callback) => {
   provider.removeListener?.(eventFilter) // make sure to not have multiple listeners for the same event at the same time
 
-  provider?.on(eventFilter, (logs) => {
+  provider?.on?.(eventFilter, (logs) => {
     const parseLogs = new ethers.utils.Interface(ABI).parseLog(logs)
 
     callback(parseLogs)
@@ -71,6 +71,7 @@ export const createEventListeners = ({
   })
 
   const RoundEndedEventFilter = contract.filters.RoundEnded()
+
   AddNewEvent(RoundEndedEventFilter, provider, ({ args }) => {
     console.log('Round ended!!', args, walletAddress)
 
@@ -87,5 +88,29 @@ export const createEventListeners = ({
     }
 
     setUpdateGameData((prev) => prev + 1)
+  })
+
+  const BattleEndedEventFilter = contract.filters.BattleEnded()
+
+  AddNewEvent(BattleEndedEventFilter, provider, ({ args }) => {
+    console.log('Battle ended!', args, walletAddress)
+
+    if (walletAddress.toLowerCase() === args.winner.toLowerCase()) {
+      setShowAlert({
+        status: true,
+        type: 'success',
+        message: 'You won!',
+      })
+    }
+
+    if (walletAddress.toLowerCase() === args.loser.toLowerCase()) {
+      setShowAlert({
+        status: true,
+        type: 'failure',
+        message: 'You lost!',
+      })
+    }
+
+    navigate('/create-battle')
   })
 }

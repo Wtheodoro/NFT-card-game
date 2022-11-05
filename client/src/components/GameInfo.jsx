@@ -8,10 +8,25 @@ import styles from '../styles'
 
 const GameInfo = () => {
   const [showSideBar, setToggleSidebar] = useState(false)
-  const { contract, gameData, setShowAlert } = useGlobalContext()
+  const { contract, gameData, setShowAlert, setErrorMessage } =
+    useGlobalContext()
   const navigate = useNavigate()
 
-  const handleBattleExit = async () => {}
+  const handleBattleExit = async () => {
+    const battleName = gameData?.activeBattle?.name
+
+    try {
+      await contract?.quitBattle(battleName)
+
+      setShowAlert({
+        status: true,
+        type: 'info',
+        message: `You're quittin the ${battleName}`,
+      })
+    } catch (error) {
+      setErrorMessage(error)
+    }
+  }
 
   const toggleSidebar = () => setToggleSidebar(!showSideBar)
 
